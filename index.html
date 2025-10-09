@@ -15,12 +15,31 @@
             <main>
                 <form class="todo__form">
                     <input type="text" class="todo__input" placeholder="Enter a task">
-                    <button type="submit" class="todo__button">Add</button>
+                    <button type="submit" class="todoButton"><img src="images/add.png" alt="add"></button>
                     <div class="search">
                         <input type="text" class="search__input" placeholder="Search">
-                        <button type="submit" class="search__button">Search</button>
+                        <button type="submit" class="search__button"><img src="images/search.png" alt="search"></button>
                     </div>
                 </form>
+                
+                <nav>
+                    <div class="total">Total tasks: 1</div>
+                    <button type="submit" class="deleteButton">Sort by date</button>
+                    <button type="submit" class="deleteButton">Delete all</button>
+                </nav>
+
+                <section class="taskList">
+                    <ul>
+                        <li>
+                            <div class="task">
+                                <input type="checkbox">
+                                <p>Task 1</p>
+                                <p>01.02.2025</p>
+                                <button type="submit" class="deleteButton"><img src="images/delete.png" alt="delete"></button>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
             </main>
 
 

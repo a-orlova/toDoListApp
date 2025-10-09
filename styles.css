@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "MyFont";
+    src: url("Pixellari.ttf");
+}
+
+* {
+    font-family: "MyFont", sans-serif;
+}
+
+img {
+    width: 20px;
+}

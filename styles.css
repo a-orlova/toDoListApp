@@ -1,3 +1,5 @@
+@import 'normalize.css';
+
 @font-face {
     font-family: "MyFont";
     src: url("Pixellari.ttf");
@@ -7,6 +9,66 @@
     font-family: "MyFont", sans-serif;
 }
 
-img {
+:root{
+    --color--white: #FCFAFA;
+    --color--black: #3B3B3B;
+
+    --color--dark-1: #1e1e1e;
+    --color--dark-2: #2c2c2c;
+
+    --color-gray-1: #ECCACB;
+    --color-gray-2: #d9d9d9;
+    --color-gray-3: #b3b3b3;
+    --color-gray-4: #757575;
+
+    --border: 1px solid var(--color-gray-2);
+    --border-radius: 8px;
+
+    --input-height: 40px;
+    --transition-duration: 0.2s;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    min-height: 100vh;
+    padding: 100px 30px;
+    background-color: var(--color-gray-1);
+
+}
+
+input, label, button{
+    transition-duration: var(--transition-duration);
+}
+
+img{
     width: 20px;
+}
+
+:focus-visible{
+    outline: 2px dashed var(--color--black);
+    outline-offset: 4px;
+    transition-duration: 0s !important;
+}
+
+.todo{
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+    width: 100%;
+    max-width: 404px;
+    min-height: 429px;
+    padding: 24px;
+    background-color: var(--color--white);
+    border: var(--border);
+    border-radius: var(--border-radius);
+}
+
+.todo__title{
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
 }

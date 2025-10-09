@@ -34,11 +34,15 @@
                     Total tasks: <span>0</span>
                 </div>
                 
-                <button type="submit" class="todo__sort-button">Sort by date</button>
+                <div class="buttons">
+                    <button type="submit" class="todo__delete-button">Delete all</button>
+
+                    <button type="submit" class="todo__filter-button">Filter</button>
+
+                    <button type="submit" class="todo__sort-button">Sort by date</button>
+                </div>
                 
-                <button type="submit" class="todo__delete-button">Delete all</button>
                 
-                <button type="submit" class="todo__filter-button">Filter</button>
             </div>
 
             <ul class="todo__list">
@@ -57,7 +61,7 @@
                 </li>
             </ul>
 
-            <div class="todo__empty-message"></div>
+            <div class="todo__empty-message">there are no tasks yet :(</div>
     </div>
 
     <script src="script.js"></script>

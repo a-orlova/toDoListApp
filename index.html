@@ -3,65 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
+    <title>to-do list</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/icon.ico">
 </head>
 <body>
     <div class="todo">
-        <h1 class="todo__title">To Do List</h1>
-            <form class="todo__form">
-                        <div class="todo__field field">
-                            <label for="new-task" class="field__label">
-                                Enter a task
-                            </label>
-                            <input class="field__input" id="new-task" type="text" placeholder=" " autocomplete="off">
-                        </div>
-                        <button class="button" type="submit"><img src="images/add.png" alt="add"></button>
+
+        <!-- заголовок -->
+        <header class="todo__header">
+            <h1 class="todo__title">to-do list</h1>
+        </header>
+
+        <!-- форма для добавления задачи -->
+        <section class="todo__controls">
+            <form class="todo__form" id="task-form">
+                <label>
+                    <input type="text" name="task" placeholder="add new task" required>
+                </label>
+                <label>
+                    <input type="date" name="date" placeholder="select date">
+                    <button type="button" class="btn btn--calendar" title="select date"><img src="images/select_date.svg" alt="calendar"></button>
+                </label>
+                <button type="submit" class="btn btn--add" title="add task">add</button>
             </form>
+        </section>
 
-            <form class="todo__form">
-                        <div class="todo__field field">
-                            <label for="search-task" class="field__label">
-                                Search task
-                            </label>
-                            <input class="field__input" id="search-task" type="search" placeholder=" " autocomplete="off">
-                        </div>
-                        <button class="button" type="submit"><img src="images/search.png" alt="search"></button>
-            </form>
+        <!-- поиск задачи по названию -->
+         <form class="todo__search">
+            <label>
+                <input type="search" name="search" placeholder="search task">
+                <button type="button" class="btn btn--search" title="serch task"><img src="images/search_btn.svg" alt="search"></button>
+            </label>
+         </form>
 
-            <div class="todo__info">
-                <div class="todo__total-tasks">
-                    Total tasks: <span>0</span>
-                </div>
-                
-                <div class="buttons">
-                    <button type="submit" class="todo__delete-button">Delete all</button>
-
-                    <button type="submit" class="todo__filter-button">Filter</button>
-
-                    <button type="submit" class="todo__sort-button">Sort by date</button>
-                </div>
-                
-                
+         <!-- количество + кнопки сортировки и удаления -->
+        <section class="todo__info">
+            <p class="todo__total">total: <span id="task-count">3</span></p>
+            <div class="todo__actions">
+                <button class="btn btn--filter" title="sort by date"><img src="images/sortByDate.svg" alt="sort by date"></button>
+                <button class="btn btn--filter" title="filter by complete status"><img src="images/filter.svg" alt="filter by complete status"></button>
+                <button class="btn btn--delete-all" title="delete all"><img src="images/dalateAllBtn.svg" alt="delete all"></button>
             </div>
+        </section>
 
-            <ul class="todo__list">
-                <li class="todo__item todo-item">
-                    <input class="todo-item__checkbox" type="checkbox" id="todo-1">
-                    <label for="todo-1" class="todo-item__label">task1</label>
-                    <button class="todo-item__edit-button" type="button" aria-label="edit" title="Edit"><img src="images/edit-button.png" alt="edit"></button>
-                    <button class="todo-item__delete-button" type="button" aria-label="delete" title="Delete"><img src="images/delete.png" alt="delete"></button>
+        <!-- список задач -->
+        <section class="todo__list">
+            <ul>
+                <li class="task">
+                    <input type="checkbox" checked>
+                    <span class="task__name">Task 1</span>
+                    <time class="task__date">13.08.2020</time>
+                    <button class="btn btn--delete" title="delete"><img src="images/del_task_unbtn.svg" alt="delete task"></button>
                 </li>
-
-                <li class="todo__item todo-item">
-                    <input class="todo-item__checkbox" type="checkbox" id="todo-2">
-                    <label for="todo-1" class="todo-item__label">task2</label>
-                    <button class="todo-item__edit-button" type="button" aria-label="edit" title="Edit"><img src="images/edit-button.png" alt="edit"></button>
-                    <button class="todo-item__delete-button" type="button" aria-label="delete" title="Delete"><img src="images/delete.png" alt="delete"></button>
+                <li class="task">
+                    <input type="checkbox" checked>
+                    <span class="task__name">Task 2</span>
+                    <time class="task__date">13.08.2020</time>
+                    <button class="btn btn--delete" title="delete"><img src="images/del_task_unbtn.svg" alt="delete task"></button>
+                </li>
+                <li class="task task--editing">
+                    <input type="checkbox" >
+                    <span class="task__name">Task 3</span>
+                    <time class="task__date">13.08.2020</time>
+                    <button class="btn btn--edit" title="edit"><img src="images/editTask.svg" alt=""></button>
+                    <button class="btn btn--delete" title="delete"><img src="images/del_task_unbtn.svg" alt="delete task"></button>
                 </li>
             </ul>
+        </section>
 
-            <div class="todo__empty-message">there are no tasks yet :(</div>
+        <!-- форма для редактирования -->
+        <section class="todo__edit">
+            <form id="edit-form">
+                <label>
+                    <input type="text" value="Task 4">
+                </label>
+                <label>
+                    <input type="date" value="2020-08-13" />
+                    <button type="button" class="btn btn--calendar" title="select date"><img src="images/select_date.svg" alt="calendar"></button>
+                </label>
+                <button type="submit" class="btn btn--save">save</button>
+                <button type="button" class="btn btn--cancel">cancel</button>
+            </form>
+        </section>
+
+        <!-- сообщение, когда нет задач -->
+        <div class="todo__empty">
+            <p>u don't have any tasks yet 😔</p>
+        </div>
+
     </div>
 
     <script src="script.js"></script>

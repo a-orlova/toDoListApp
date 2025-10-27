@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             emptyDiv.style.display = 'none';
             
             const emptyPara = document.createElement('p');
-            emptyPara.textContent = "u don't have any tasks yet 😔";
+            emptyPara.textContent = "u don't have any tasks yet :(";
             
             emptyDiv.appendChild(emptyPara);
             this.todoContainer.appendChild(emptyDiv);

@@ -81,14 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             dateInput.type = 'date';
             dateInput.name = 'date';
             
-            const calendarBtn = document.createElement('button');
-            calendarBtn.type = 'button';
-            calendarBtn.className = 'btn btn--calendar';
-            calendarBtn.title = 'select date';
-            calendarBtn.innerHTML = '<img src="images/select_date.svg" alt="calendar">';
-            
             dateLabel.appendChild(dateInput);
-            dateLabel.appendChild(calendarBtn);
 
             const addBtn = document.createElement('button');
             addBtn.type = 'submit';
@@ -113,14 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.name = 'search';
             searchInput.placeholder = 'search task';
             
-            const searchBtn = document.createElement('button');
-            searchBtn.type = 'button';
-            searchBtn.className = 'btn btn--search';
-            searchBtn.title = 'search task';
-            searchBtn.innerHTML = '<img src="images/search_btn.svg" alt="search">';
-
             searchLabel.appendChild(searchInput);
-            searchLabel.appendChild(searchBtn);
             searchSection.appendChild(searchLabel);
             this.todoContainer.appendChild(searchSection);
         }
@@ -177,14 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.editDateInput = document.createElement('input');
             this.editDateInput.type = 'date';
             
-            const calendarBtn = document.createElement('button');
-            calendarBtn.type = 'button';
-            calendarBtn.className = 'btn btn--calendar';
-            calendarBtn.title = 'select date';
-            calendarBtn.innerHTML = '<img src="images/select_date.svg" alt="calendar">';
-            
             dateLabel.appendChild(this.editDateInput);
-            dateLabel.appendChild(calendarBtn);
 
             const saveBtn = document.createElement('button');
             saveBtn.type = 'submit';

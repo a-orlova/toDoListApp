@@ -47,7 +47,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // список задач
             this.taskList = document.createElement('section');
             this.taskList.className = 'todo__list';
-            this.taskList.innerHTML = '<ul id="tasks-container"></ul>';
+            
+            this.tasksContainer = document.createElement('ul');
+            this.tasksContainer.id = 'tasks-container';
+            this.taskList.appendChild(this.tasksContainer);
+            
             this.todoContainer.appendChild(this.taskList);
 
             // форма редактирования 
@@ -55,9 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // сообщение, что нет задач
             this.createEmptyMessage();
-
-            // контейнер для задач
-            this.tasksContainer = document.getElementById('tasks-container');
         }
 
         createAddForm() {
@@ -117,25 +118,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const totalPara = document.createElement('p');
             totalPara.className = 'todo__total';
-            totalPara.innerHTML = 'total: <span id="task-count">0</span>';
+            
+            const totalText = document.createTextNode('total: ');
+            this.taskCountElement = document.createElement('span');
+            this.taskCountElement.id = 'task-count';
+            this.taskCountElement.textContent = '0';
+            
+            totalPara.appendChild(totalText);
+            totalPara.appendChild(this.taskCountElement);
             
             const actionsDiv = document.createElement('div');
             actionsDiv.className = 'todo__actions';
 
-            const sortBtn = document.createElement('button');
-            sortBtn.className = 'btn btn--filter';
-            sortBtn.title = 'sort by date';
-            sortBtn.innerHTML = '<img src="images/sortByDate.svg" alt="sort by date">';
-
-            const filterBtn = document.createElement('button');
-            filterBtn.className = 'btn btn--filter';
-            filterBtn.title = 'filter by complete status';
-            filterBtn.innerHTML = '<img src="images/filter.svg" alt="filter by complete status">';
-
-            const deleteAllBtn = document.createElement('button');
-            deleteAllBtn.className = 'btn btn--delete-all';
-            deleteAllBtn.title = 'delete all';
-            deleteAllBtn.innerHTML = '<img src="images/dalateAllBtn.svg" alt="delete all">';
+            const sortBtn = this.createButtonWithImage('btn--filter', 'sort by date', 'images/sortByDate.svg', 'sort by date');
+            const filterBtn = this.createButtonWithImage('btn--filter', 'filter by complete status', 'images/filter.svg', 'filter by complete status');
+            const deleteAllBtn = this.createButtonWithImage('btn--delete-all', 'delete all', 'images/dalateAllBtn.svg', 'delete all');
 
             actionsDiv.appendChild(sortBtn);
             actionsDiv.appendChild(filterBtn);
@@ -144,6 +141,19 @@ document.addEventListener('DOMContentLoaded', function() {
             infoSection.appendChild(totalPara);
             infoSection.appendChild(actionsDiv);
             this.todoContainer.appendChild(infoSection);
+        }
+
+        createButtonWithImage(btnClass, title, imgSrc, imgAlt) {
+            const button = document.createElement('button');
+            button.className = `btn ${btnClass}`;
+            button.title = title;
+            
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.alt = imgAlt;
+            
+            button.appendChild(img);
+            return button;
         }
 
         createEditForm() {
@@ -331,7 +341,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         renderTasks() {
-            this.tasksContainer.innerHTML = '';
+            while (this.tasksContainer.firstChild) {
+                this.tasksContainer.removeChild(this.tasksContainer.firstChild);
+            }
 
             let filteredTasks = [...this.tasks];
 
@@ -378,16 +390,10 @@ document.addEventListener('DOMContentLoaded', function() {
             time.className = 'task__date';
             time.textContent = this.formatDate(task.date);
 
-            const editBtn = document.createElement('button');
-            editBtn.className = 'btn btn--edit';
-            editBtn.title = 'edit';
-            editBtn.innerHTML = '<img src="images/editTask.svg" alt="edit">';
+            const editBtn = this.createButtonWithImage('btn--edit', 'edit', 'images/editTask.svg', 'edit');
             editBtn.addEventListener('click', () => this.startEditTask(task.id));
 
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'btn btn--delete';
-            deleteBtn.title = 'delete';
-            deleteBtn.innerHTML = '<img src="images/del_task_unbtn.svg" alt="delete task">';
+            const deleteBtn = this.createButtonWithImage('btn--delete', 'delete', 'images/del_task_unbtn.svg', 'delete task');
             deleteBtn.addEventListener('click', () => this.deleteTask(task.id));
 
             li.appendChild(checkbox);
@@ -442,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             this.parentNode.insertBefore(draggedTask, this);
                         }
                         
-                        app.reorderTasks(fromIndex, toIndex);
+                        this.reorderTasks(fromIndex, toIndex);
                     }
                 });
             });
@@ -456,10 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         updateTaskCount() {
-            const taskCountElement = document.getElementById('task-count');
-            if (taskCountElement) {
-                taskCountElement.textContent = this.tasks.length;
-            }
+            this.taskCountElement.textContent = this.tasks.length;
         }
 
         toggleEmptyMessage() {

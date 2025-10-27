@@ -70,6 +70,7 @@ body {
     border: 2px solid #B3B3B3;
     font-size: 16px;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .todo__form input:focus,
@@ -229,6 +230,7 @@ body {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .btn--save {
@@ -286,8 +288,11 @@ body {
         justify-content: center;
     }
 
+    .todo__total {
+        text-align: center;
+    }
+
     .task {
-        flex-wrap: wrap;
         gap: 10px;
     }
 

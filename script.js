@@ -198,6 +198,283 @@ document.addEventListener('DOMContentLoaded', function() {
 
             this.emptyMessage = emptyDiv;
         }
+
+        bindEvents() {
+            this.addForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.addTask();
+            });
+
+            const searchInput = document.querySelector('input[name="search"]');
+            searchInput.addEventListener('input', (e) => {
+                this.searchTasks(e.target.value);
+            });
+
+            const actionsDiv = document.querySelector('.todo__actions');
+            actionsDiv.children[0].addEventListener('click', () => this.toggleSortByDate());
+            actionsDiv.children[1].addEventListener('click', () => this.toggleFilter());
+            actionsDiv.children[2].addEventListener('click', () => this.deleteAllTasks());
+
+            this.editForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.saveEditedTask();
+            });
+
+            const cancelBtn = this.editForm.querySelector('.btn--cancel');
+            cancelBtn.addEventListener('click', () => this.cancelEdit());
+        }
+
+        generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        addTask() {
+            const formData = new FormData(this.addForm);
+            const taskName = formData.get('task').trim();
+            const taskDate = formData.get('date');
+
+            if (!taskName) return;
+
+            const task = {
+                id: this.generateId(),
+                name: taskName,
+                date: taskDate || new Date().toISOString().split('T')[0],
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            this.tasks.push(task);
+            this.saveToLocalStorage();
+            this.renderTasks();
+            this.updateTaskCount();
+            this.toggleEmptyMessage();
+            this.addForm.reset();
+        }
+
+        deleteTask(taskId) {
+            this.tasks = this.tasks.filter(task => task.id !== taskId);
+            this.saveToLocalStorage();
+            this.renderTasks();
+            this.updateTaskCount();
+            this.toggleEmptyMessage();
+        }
+
+        toggleTaskCompletion(taskId) {
+            const task = this.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                this.saveToLocalStorage();
+                this.renderTasks();
+            }
+        }
+
+        startEditTask(taskId) {
+            const task = this.tasks.find(t => t.id === taskId);
+            if (task) {
+                this.isEditing = true;
+                this.editingTaskId = taskId;
+                this.editNameInput.value = task.name;
+                this.editDateInput.value = task.date;
+                this.editSection.style.display = 'block';
+                this.taskList.style.display = 'none';
+            }
+        }
+
+        saveEditedTask() {
+            const task = this.tasks.find(t => t.id === this.editingTaskId);
+            if (task) {
+                task.name = this.editNameInput.value.trim();
+                task.date = this.editDateInput.value;
+                this.saveToLocalStorage();
+                this.cancelEdit();
+                this.renderTasks();
+            }
+        }
+
+        cancelEdit() {
+            this.isEditing = false;
+            this.editingTaskId = null;
+            this.editSection.style.display = 'none';
+            this.taskList.style.display = 'block';
+        }
+
+        searchTasks(query) {
+            this.currentSearchQuery = query.toLowerCase();
+            this.renderTasks();
+        }
+
+        toggleSortByDate() {
+            this.isSortByDate = !this.isSortByDate;
+            this.renderTasks();
+        }
+
+        toggleFilter() {
+            const filters = ['all', 'active', 'completed'];
+            const currentIndex = filters.indexOf(this.currentFilter);
+            this.currentFilter = filters[(currentIndex + 1) % filters.length];
+            this.renderTasks();
+        }
+
+        deleteAllTasks() {
+            if (confirm('Are you sure you want to delete all tasks?')) {
+                this.tasks = [];
+                this.saveToLocalStorage();
+                this.renderTasks();
+                this.updateTaskCount();
+                this.toggleEmptyMessage();
+            }
+        }
+
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU');
+        }
+
+        renderTasks() {
+            this.tasksContainer.innerHTML = '';
+
+            let filteredTasks = [...this.tasks];
+
+            if (this.currentSearchQuery) {
+                filteredTasks = filteredTasks.filter(task => 
+                    task.name.toLowerCase().includes(this.currentSearchQuery)
+                );
+            }
+
+            if (this.currentFilter === 'active') {
+                filteredTasks = filteredTasks.filter(task => !task.completed);
+            } else if (this.currentFilter === 'completed') {
+                filteredTasks = filteredTasks.filter(task => task.completed);
+            }
+
+            if (this.isSortByDate) {
+                filteredTasks.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+
+            filteredTasks.forEach(task => {
+                const taskElement = this.createTaskElement(task);
+                this.tasksContainer.appendChild(taskElement);
+            });
+
+            this.makeTasksDraggable();
+        }
+
+        createTaskElement(task) {
+            const li = document.createElement('li');
+            li.className = `task ${task.completed ? 'task--completed' : ''}`;
+            li.draggable = true;
+            li.dataset.taskId = task.id;
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = task.completed;
+            checkbox.addEventListener('change', () => this.toggleTaskCompletion(task.id));
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'task__name';
+            nameSpan.textContent = task.name;
+
+            const time = document.createElement('time');
+            time.className = 'task__date';
+            time.textContent = this.formatDate(task.date);
+
+            const editBtn = document.createElement('button');
+            editBtn.className = 'btn btn--edit';
+            editBtn.title = 'edit';
+            editBtn.innerHTML = '<img src="images/editTask.svg" alt="edit">';
+            editBtn.addEventListener('click', () => this.startEditTask(task.id));
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn btn--delete';
+            deleteBtn.title = 'delete';
+            deleteBtn.innerHTML = '<img src="images/del_task_unbtn.svg" alt="delete task">';
+            deleteBtn.addEventListener('click', () => this.deleteTask(task.id));
+
+            li.appendChild(checkbox);
+            li.appendChild(nameSpan);
+            li.appendChild(time);
+            li.appendChild(editBtn);
+            li.appendChild(deleteBtn);
+
+            return li;
+        }
+
+        makeTasksDraggable() {
+            const tasks = this.tasksContainer.querySelectorAll('.task');
+            let draggedTask = null;
+
+            tasks.forEach(task => {
+                task.addEventListener('dragstart', function() {
+                    draggedTask = this;
+                    setTimeout(() => this.style.opacity = '0.4', 0);
+                });
+
+                task.addEventListener('dragend', function() {
+                    setTimeout(() => this.style.opacity = '1', 0);
+                    draggedTask = null;
+                });
+
+                task.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+
+                task.addEventListener('dragenter', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#f0f0f0';
+                });
+
+                task.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '';
+                });
+
+                task.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '';
+                    
+                    if (draggedTask && draggedTask !== this) {
+                        const allTasks = Array.from(this.parentNode.children);
+                        const fromIndex = allTasks.indexOf(draggedTask);
+                        const toIndex = allTasks.indexOf(this);
+                        
+                        if (fromIndex < toIndex) {
+                            this.parentNode.insertBefore(draggedTask, this.nextSibling);
+                        } else {
+                            this.parentNode.insertBefore(draggedTask, this);
+                        }
+                        
+                        app.reorderTasks(fromIndex, toIndex);
+                    }
+                });
+            });
+        }
+
+        reorderTasks(fromIndex, toIndex) {
+            const taskToMove = this.tasks[fromIndex];
+            this.tasks.splice(fromIndex, 1);
+            this.tasks.splice(toIndex, 0, taskToMove);
+            this.saveToLocalStorage();
+        }
+
+        updateTaskCount() {
+            const taskCountElement = document.getElementById('task-count');
+            if (taskCountElement) {
+                taskCountElement.textContent = this.tasks.length;
+            }
+        }
+
+        toggleEmptyMessage() {
+            if (this.tasks.length === 0) {
+                this.emptyMessage.style.display = 'block';
+                this.taskList.style.display = 'none';
+            } else {
+                this.emptyMessage.style.display = 'none';
+                this.taskList.style.display = 'block';
+            }
+        }
+
+        saveToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(this.tasks));
+        }
     }
 
     const app = new TodoApp();

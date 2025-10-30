@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-    class TodoApp {
+class TodoApp {
         constructor() {
             this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
             this.currentFilter = 'all';
@@ -481,4 +480,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const app = new TodoApp();
-});
